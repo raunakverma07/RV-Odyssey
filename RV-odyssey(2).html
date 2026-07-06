@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Raunak Verma — Data Scientist</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════
+   RESET & TOKENS
+═══════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#04070e;
+  --s1:#080d1a;
+  --glass:rgba(255,255,255,0.034);
+  --glass2:rgba(255,255,255,0.055);
+  --rim:rgba(255,255,255,0.068);
+  --rim2:rgba(255,255,255,0.13);
+  /* PRIMARY = cyan, SECONDARY = violet, ACCENT = pink */
+  --lime:#9b5cff;     /* kept as alias — drives all accent vars */
+  --cyan:#00cfff;
+  --violet:#9b5cff;
+  --pink:#ff6fd8;
+  --acc1:#00cfff;
+  --acc2:#9b5cff;
+  --txt:#dde8ff;
+  --mid:#6a88aa;
+  --dim:#2e4055;
+  --H:'Syne',sans-serif;
+  --B:'Inter',sans-serif;
+  --M:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(.25,.46,.45,.94);
+  /* same shifting gradient as "Verma" — used everywhere */
+  --grad:linear-gradient(125deg,#00cfff 0%,#9b5cff 55%,#ff6fd8 100%);
+}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:var(--B);overflow-x:hidden;
+  /* kill tap highlight everywhere */
+  -webkit-tap-highlight-color:transparent;
+  -webkit-touch-callout:none;
+}
+*{-webkit-tap-highlight-color:transparent;}
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#9b5cff,#ff6fd8);border-radius:4px;}
+
+/* ═══════════════════════════════════════
+   CANVAS
+═══════════════════════════════════════ */
+#cvs{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  height:62px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 64px;
+  background:rgba(4,7,14,.65);
+  backdrop-filter:blur(28px) saturate(160%);
+  border-bottom:1px solid var(--rim);
+}
+.logo{
+  font-family:var(--H);font-size:20px;font-weight:800;cursor:pointer;
+  background:linear-gradient(125deg,#00cfff 0%,#9b5cff 55%,#ff6fd8 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:gradShift 5s ease-in-out infinite alternate;
+  user-select:none;
+}
+.nav-links{display:flex;align-items:center;gap:36px;}
+.nav-links a{
+  font-family:var(--B);color:var(--mid);text-decoration:none;
+  font-size:12.5px;font-weight:500;letter-spacing:.9px;text-transform:uppercase;
+  transition:.22s;position:relative;user-select:none;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-3px;left:0;
+  width:0;height:1px;
+  background:linear-gradient(90deg,#00cfff,#9b5cff,#ff6fd8);
+  transition:width .3s var(--ease);
+}
+.nav-links a:hover{color:#9b5cff;}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{
+  font-family:var(--H);font-size:11px;font-weight:700;letter-spacing:1.8px;
+  text-transform:uppercase;
+  background:transparent;
+  border:1px solid rgba(155,92,255,.55);
+  color:#9b5cff;
+  padding:8px 20px;border-radius:6px;
+  cursor:pointer;transition:.3s var(--ease);position:relative;overflow:hidden;
+  user-select:none;
+}
+.nav-cta::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(125deg,#00cfff,#9b5cff,#ff6fd8);
+  transform:translateX(-101%);transition:transform .3s var(--ease);z-index:-1;
+}
+.nav-cta:hover{color:var(--bg);}
+.nav-cta:hover::before{transform:translateX(0);}
+
+/* ═══════════════════════════════════════
+   MAIN SCROLL PAGE
+═══════════════════════════════════════ */
+#main-page{position:relative;z-index:1;padding-top:62px;}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+.hero{
+  min-height:calc(100vh - 62px);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 64px;position:relative;overflow:hidden;
+}
+.hero-orb{position:absolute;width:640px;height:640px;border-radius:50%;
+  background:radial-gradient(circle,rgba(155,92,255,.06) 0%,transparent 66%);
+  right:-80px;top:50%;transform:translateY(-50%);pointer-events:none;}
+.hero-orb2{position:absolute;width:380px;height:380px;border-radius:50%;
+  background:radial-gradient(circle,rgba(155,92,255,.05) 0%,transparent 68%);
+  left:-60px;bottom:-40px;pointer-events:none;}
+
+.h-badge{
+  display:inline-flex;align-items:center;gap:10px;margin-bottom:30px;
+  font-family:var(--M);font-size:11px;color:#9b5cff;
+  letter-spacing:2.5px;text-transform:uppercase;
+  opacity:0;animation:su .7s .1s var(--ease) forwards;
+}
+.h-dot{width:7px;height:7px;border-radius:50%;
+  background:linear-gradient(135deg,#00cfff,#9b5cff);
+  box-shadow:0 0 12px #9b5cff;animation:glow 2s infinite;}
+
+.h-name{
+  font-family:var(--H);font-weight:800;
+  font-size:clamp(58px,8vw,118px);
+  line-height:.9;letter-spacing:-4px;margin-bottom:0;
+  opacity:0;animation:su .85s .22s var(--ease) forwards;
+}
+.h-name .r1{display:block;color:var(--txt);}
+.h-name .r2{
+  display:block;
+  background:linear-gradient(125deg,var(--lime) 0%,var(--cyan) 50%,var(--violet) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:gradShift 5s ease-in-out infinite alternate;
+}
+.h-role{
+  font-family:var(--M);font-size:12.5px;color:#9b5cff;
+  letter-spacing:3px;text-transform:uppercase;
+  margin:28px 0 18px;
+  opacity:0;animation:su .7s .38s var(--ease) forwards;
+}
+.h-desc{
+  font-size:16px;color:var(--mid);line-height:1.78;max-width:560px;
+  margin-bottom:46px;font-weight:300;
+  opacity:0;animation:su .7s .5s var(--ease) forwards;
+}
+.h-btns{
+  display:flex;gap:14px;flex-wrap:wrap;
+  opacity:0;animation:su .7s .64s var(--ease) forwards;
+}
+.btn-p{
+  font-family:var(--H);font-size:14px;font-weight:700;
+  padding:14px 34px;border:none;border-radius:8px;cursor:pointer;
+  background:linear-gradient(125deg,#00cfff 0%,#9b5cff 55%,#ff6fd8 100%);
+  background-size:200% auto;
+  color:#fff;transition:.35s var(--ease);
+  box-shadow:0 0 32px rgba(155,92,255,.2);
+  position:relative;overflow:hidden;user-select:none;
+  animation:gradShift 5s ease-in-out infinite alternate;
+}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 12px 46px rgba(155,92,255,.4);}
+.btn-p span{position:relative;z-index:1;}
+.btn-s{
+  font-family:var(--B);font-size:14px;font-weight:500;
+  padding:14px 34px;border:1px solid var(--rim2);border-radius:8px;
+  cursor:pointer;background:transparent;color:var(--txt);
+  transition:.3s var(--ease);user-select:none;
+}
+.btn-s:hover{border-color:#9b5cff;color:#9b5cff;transform:translateY(-3px);}
+
+/* hero right card */
+.hcard{
+  position:absolute;right:64px;top:50%;transform:translateY(-50%);width:298px;
+  opacity:0;animation:su .85s .32s var(--ease) forwards;
+}
+.hcard-in{
+  background:var(--glass);border:1px solid var(--rim);border-radius:22px;
+  padding:32px;position:relative;overflow:hidden;backdrop-filter:blur(14px);
+}
+.hcard-in::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#00cfff,#9b5cff,#ff6fd8,transparent);}
+.hav{width:74px;height:74px;border-radius:50%;
+  background:linear-gradient(125deg,#00cfff,#9b5cff,#ff6fd8);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--H);font-size:22px;font-weight:800;color:#fff;
+  margin-bottom:16px;box-shadow:0 0 32px rgba(155,92,255,.28);overflow:hidden;}
+.hav img{width:100%;height:100%;object-fit:cover;}
+.hcn{font-family:var(--H);font-size:17px;font-weight:800;margin-bottom:4px;}
+.hcr{font-family:var(--M);font-size:10px;color:#9b5cff;
+  letter-spacing:1.8px;text-transform:uppercase;margin-bottom:22px;}
+.hst-g{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;}
+.hst{background:rgba(255,255,255,.025);border:1px solid var(--rim);
+  border-radius:8px;padding:12px;}
+.hst-n{font-family:var(--H);font-size:22px;font-weight:800;line-height:1;
+  background:linear-gradient(125deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hst-l{font-family:var(--M);font-size:9.5px;color:var(--mid);margin-top:3px;}
+.hpills{display:flex;flex-wrap:wrap;gap:6px;}
+.hpill{font-family:var(--M);font-size:9.5px;padding:4px 10px;border-radius:100px;
+  background:rgba(155,92,255,.1);border:1px solid rgba(155,92,255,.22);color:#b48aff;}
+
+.scroll-hint{
+  position:absolute;bottom:38px;left:64px;
+  display:flex;align-items:center;gap:14px;
+  font-family:var(--M);font-size:10px;color:var(--dim);letter-spacing:2px;
+  opacity:0;animation:su .7s 1.1s var(--ease) forwards;
+}
+.sh-line{width:46px;height:1px;background:var(--dim);}
+
+/* ═══════════════════════════════════════
+   SECTION WRAPPER
+═══════════════════════════════════════ */
+.wrap{padding:0 64px;position:relative;z-index:1;}
+.div{height:1px;background:var(--rim);position:relative;overflow:hidden;}
+.div::after{content:'';position:absolute;top:0;left:-100px;height:1px;width:90px;
+  background:linear-gradient(90deg,transparent,#00cfff,#9b5cff,transparent);
+  animation:scan 5s ease-in-out infinite;}
+
+/* ═══════════════════════════════════════
+   ABOUT SECTION
+═══════════════════════════════════════ */
+.about-sec{padding:80px 64px 0;position:relative;z-index:1;}
+.sec-eye{font-family:var(--M);font-size:10px;
+  background:linear-gradient(90deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;}
+.sec-title{font-family:var(--H);font-size:clamp(30px,4vw,48px);font-weight:800;
+  letter-spacing:-2px;line-height:1;margin-bottom:36px;}
+.about-box{
+  background:var(--glass);border:1px solid var(--rim);border-radius:20px;
+  padding:42px 48px;position:relative;overflow:hidden;max-width:900px;
+}
+.about-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#00cfff,#9b5cff,#ff6fd8,transparent);}
+.about-box p{color:var(--mid);font-size:15px;line-height:1.88;font-weight:300;}
+.about-box p+p{margin-top:16px;}
+
+/* ═══════════════════════════════════════
+   BLOCK CARDS  (clickable entry points)
+═══════════════════════════════════════ */
+.blocks-wrap{padding:60px 64px 0;position:relative;z-index:1;}
+
+/* ── PROJECTS block (full width) ── */
+.blk-projects{
+  background:var(--glass);border:1px solid var(--rim);border-radius:20px;
+  padding:36px 44px;cursor:pointer;position:relative;overflow:hidden;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:transform .4s var(--ease),border-color .4s,box-shadow .4s;
+  user-select:none;margin-bottom:18px;
+}
+.blk-projects::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;
+  background:linear-gradient(90deg,#00cfff,#9b5cff,#ff6fd8);
+  transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease);}
+.blk-projects:hover{transform:translateY(-6px);border-color:rgba(155,92,255,.3);
+  box-shadow:0 20px 56px rgba(0,0,0,.5),0 0 30px rgba(155,92,255,.08);}
+.blk-projects:hover::before{transform:scaleX(1);}
+.blk-projects:hover .blk-arr{transform:translateX(6px);}
+.blk-p-left .blk-eye{font-family:var(--M);font-size:10px;
+  background:linear-gradient(90deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;}
+.blk-p-left h2{font-family:var(--H);font-size:26px;font-weight:800;
+  letter-spacing:-1px;margin-bottom:8px;}
+.blk-p-left p{color:var(--mid);font-size:14px;font-weight:300;line-height:1.6;max-width:500px;}
+.blk-p-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px;}
+.blk-tag{font-family:var(--M);font-size:10px;padding:4px 11px;border-radius:5px;
+  background:rgba(155,92,255,.1);border:1px solid rgba(155,92,255,.22);color:#b48aff;}
+.blk-p-right{display:flex;align-items:center;gap:20px;flex-shrink:0;}
+.blk-p-icon{font-size:44px;}
+.blk-arr{
+  font-size:26px;transition:transform .3s var(--ease);
+  background:linear-gradient(125deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ── smaller blocks grid ── */
+.blk-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-bottom:18px;
+}
+.blk-grid-2{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+}
+.blk{
+  background:var(--glass);border:1px solid var(--rim);border-radius:20px;
+  padding:32px 28px;cursor:pointer;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:transform .4s var(--ease),border-color .4s,box-shadow .4s;
+  user-select:none;min-height:170px;
+}
+.blk::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;
+  background:linear-gradient(90deg,transparent,#00cfff,#9b5cff,transparent);
+  transform:scaleX(0);transform-origin:center;transition:transform .45s var(--ease);}
+.blk::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 20%,rgba(155,92,255,.06),transparent 55%);
+  opacity:0;transition:opacity .4s;}
+.blk:hover{transform:translateY(-7px) scale(1.01);
+  border-color:rgba(155,92,255,.28);
+  box-shadow:0 22px 58px rgba(0,0,0,.52),0 0 28px rgba(155,92,255,.06);}
+.blk:hover::before{transform:scaleX(1);}
+.blk:hover::after{opacity:1;}
+.blk:hover .blk-arrow{transform:translateX(5px);}
+.blk-icon{font-size:28px;margin-bottom:14px;}
+.blk-lbl{font-family:var(--M);font-size:9.5px;
+  background:linear-gradient(90deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:2.5px;text-transform:uppercase;margin-bottom:7px;}
+.blk-name{font-family:var(--H);font-size:19px;font-weight:700;
+  letter-spacing:-.5px;color:var(--txt);margin-bottom:7px;}
+.blk-hint{color:var(--mid);font-size:12.5px;font-weight:300;
+  line-height:1.5;flex:1;}
+.blk-arrow{
+  font-size:18px;margin-top:16px;align-self:flex-end;
+  transition:transform .3s var(--ease);
+  background:linear-gradient(125deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ═══════════════════════════════════════
+   CONTACT SECTION
+═══════════════════════════════════════ */
+.contact-sec{padding:60px 64px 0;position:relative;z-index:1;}
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.cc{
+  background:var(--glass);border:1px solid var(--rim);border-radius:16px;
+  padding:26px 28px;
+  transition:transform .35s var(--ease),border-color .35s;
+  user-select:none;
+}
+.cc:hover{transform:translateY(-5px);border-color:rgba(155,92,255,.3);}
+.cc-lbl{font-family:var(--M);font-size:10px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;}
+.cc a{
+  background:linear-gradient(90deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-decoration:none;font-family:var(--M);font-size:13px;
+  word-break:break-all;transition:.2s;
+}
+.cc a:hover{opacity:.7;}
+
+/* ═══════════════════════════════════════
+   FEEDBACK
+═══════════════════════════════════════ */
+.fb-sec{padding:60px 64px 0;position:relative;z-index:1;}
+.fb-box{
+  max-width:600px;background:var(--glass);border:1px solid var(--rim);
+  border-radius:20px;padding:42px 46px;position:relative;overflow:hidden;
+  backdrop-filter:blur(8px);
+}
+.fb-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#00cfff,#9b5cff,#ff6fd8,transparent);}
+.fb-intro{color:var(--mid);font-size:14px;line-height:1.72;
+  margin-bottom:26px;font-weight:300;}
+.fb-form{display:flex;flex-direction:column;gap:12px;}
+.fb-form input,.fb-form textarea{
+  background:rgba(255,255,255,.025);border:1px solid var(--rim);
+  border-radius:9px;padding:13px 16px;color:var(--txt);
+  font-family:var(--B);font-size:14px;outline:none;transition:.28s;width:100%;
+  -webkit-appearance:none;
+}
+.fb-form input:focus,.fb-form textarea:focus{
+  border-color:#9b5cff;box-shadow:0 0 0 3px rgba(155,92,255,.09);}
+.fb-form textarea{resize:vertical;min-height:120px;}
+.fb-form input::placeholder,.fb-form textarea::placeholder{color:var(--dim);}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{
+  margin-top:70px;position:relative;z-index:1;
+  border-top:1px solid var(--rim);padding:32px 64px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+footer p{font-family:var(--M);font-size:11px;color:var(--dim);letter-spacing:.5px;}
+.fg{
+  background:linear-gradient(90deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ═══════════════════════════════════════
+   INNER PAGES (drawer style)
+═══════════════════════════════════════ */
+.inner-pg{
+  position:fixed;inset:0;z-index:950;
+  background:var(--bg);
+  transform:translateY(100%);
+  transition:transform .55s var(--ease);
+  overflow-y:auto;
+  -webkit-tap-highlight-color:transparent;
+}
+.inner-pg.open{transform:translateY(0);}
+.inner-wrap{padding:84px 64px 80px;}
+
+.back-btn{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--H);font-size:12px;font-weight:600;letter-spacing:.8px;
+  color:var(--mid);background:var(--glass);border:1px solid var(--rim);
+  border-radius:100px;padding:9px 22px;cursor:pointer;
+  transition:.28s var(--ease);margin-bottom:46px;user-select:none;
+}
+.back-btn:hover{border-color:#9b5cff;color:#9b5cff;}
+
+.i-eye{font-family:var(--M);font-size:10px;
+  background:linear-gradient(90deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;}
+.i-title{font-family:var(--H);font-size:clamp(30px,5vw,54px);font-weight:800;
+  letter-spacing:-2px;line-height:1;margin-bottom:12px;}
+.i-sub{color:var(--mid);font-size:15px;line-height:1.7;
+  max-width:520px;margin-bottom:48px;font-weight:300;}
+
+/* phase tabs */
+.ptabs{display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap;}
+.ptab{
+  font-family:var(--H);font-size:13px;font-weight:600;
+  padding:10px 24px;border-radius:8px;cursor:pointer;
+  background:var(--glass);border:1px solid var(--rim);color:var(--mid);
+  transition:.25s;user-select:none;
+}
+.ptab.on{background:rgba(155,92,255,.1);border-color:#9b5cff;color:#9b5cff;}
+.ptab:hover:not(.on){border-color:var(--rim2);color:var(--txt);}
+
+/* content box */
+.cbox{
+  max-width:860px;background:var(--glass);border:1px solid var(--rim);
+  border-radius:20px;padding:48px 54px;position:relative;overflow:hidden;
+  backdrop-filter:blur(8px);
+}
+.cbox::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#00cfff,#9b5cff,#ff6fd8,transparent);}
+.cbox-lbl{font-family:var(--M);font-size:10px;
+  background:linear-gradient(90deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:2.5px;text-transform:uppercase;margin-bottom:26px;}
+.cbox p{color:var(--mid);font-size:15px;line-height:1.95;
+  margin-bottom:20px;font-weight:300;}
+.cbox p:last-child{margin:0;}
+.cbox.anim{animation:fu .38s var(--ease) both;}
+
+/* project list */
+.plist{display:flex;flex-direction:column;gap:11px;}
+.prow{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 28px;border-radius:13px;
+  background:var(--glass);border:1px solid var(--rim);
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .35s var(--ease),border-color .35s;
+  user-select:none;
+}
+.prow::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,#9b5cff,#ff6fd8);
+  transform:scaleY(0);transform-origin:top;transition:transform .35s var(--ease);}
+.prow:hover{transform:translateX(7px);border-color:rgba(155,92,255,.28);}
+.prow:hover::before{transform:scaleY(1);}
+.prow:hover .p-arr{transform:translateX(5px);}
+.pl h3{font-family:var(--H);font-size:16.5px;font-weight:700;margin-bottom:4px;}
+.pl p{color:var(--mid);font-size:13px;font-weight:300;}
+.pr{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.ptags{display:flex;gap:6px;flex-wrap:wrap;}
+.ptag{font-family:var(--M);font-size:10px;padding:3px 10px;border-radius:5px;
+  background:rgba(155,92,255,.09);border:1px solid rgba(155,92,255,.2);color:#b48aff;}
+.p-arr{
+  font-size:17px;transition:transform .3s var(--ease);
+  background:linear-gradient(125deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* project detail */
+.pdbox{
+  max-width:860px;background:var(--glass);border:1px solid var(--rim);
+  border-radius:20px;padding:48px 54px;position:relative;overflow:hidden;
+  backdrop-filter:blur(8px);animation:fu .4s var(--ease) both;
+}
+.pdbox::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#00cfff,#9b5cff,#ff6fd8,transparent);}
+.pd-t{font-family:var(--H);font-size:29px;font-weight:800;letter-spacing:-1px;margin-bottom:10px;}
+.pd-tech{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px;}
+.pd-desc{color:var(--mid);font-size:15px;line-height:1.9;margin-bottom:32px;font-weight:300;}
+.pd-links{display:flex;gap:12px;}
+.pdl{font-family:var(--H);font-size:13px;font-weight:600;
+  padding:11px 24px;border-radius:8px;text-decoration:none;transition:.3s;user-select:none;}
+.pdl.s{
+  background:linear-gradient(125deg,#00cfff,#9b5cff,#ff6fd8);
+  background-size:200% auto;color:#fff;
+  animation:gradShift 5s ease-in-out infinite alternate;
+}
+.pdl.s:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(155,92,255,.35);}
+.pdl.g{border:1px solid var(--rim2);color:var(--mid);}
+.pdl.g:hover{border-color:#9b5cff;color:#b48aff;}
+
+/* ═══════════════════════════════════════
+   SKILLS PAGE
+═══════════════════════════════════════ */
+.skills-container{display:flex;flex-direction:column;gap:20px;max-width:860px;}
+.skill-box{
+  background:var(--glass);border:1px solid var(--rim);border-radius:18px;
+  padding:38px 44px;position:relative;overflow:hidden;
+  backdrop-filter:blur(8px);
+  animation:fu .45s var(--ease) both;
+}
+.skill-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#00cfff,#9b5cff,#ff6fd8,transparent);}
+.skill-box h2{
+  font-family:var(--H);font-size:18px;font-weight:700;letter-spacing:-.5px;
+  margin-bottom:18px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.skill-box p{color:var(--mid);font-size:15px;line-height:1.88;font-weight:300;}
+.skill-box p+p{margin-top:14px;}
+.skill-box ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.skill-box ul li{
+  color:var(--mid);font-size:14.5px;font-weight:300;line-height:1.6;
+  padding-left:20px;position:relative;
+}
+.skill-box ul li::before{
+  content:'◆';position:absolute;left:0;
+  font-size:7px;top:5px;
+  background:linear-gradient(135deg,#00cfff,#9b5cff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ═══════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════ */
+@keyframes glow{
+  0%  {box-shadow:0 0 14px #00cfff;}
+  33% {box-shadow:0 0 14px #9b5cff;}
+  66% {box-shadow:0 0 14px #ff6fd8;}
+  100%{box-shadow:0 0 14px #00cfff;}
+}
+@keyframes gradShift{from{background-position:0%}to{background-position:100%}}
+@keyframes su{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fu{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scan{0%{left:-100px;}100%{left:calc(100% + 100px);}}
+
+/* stagger blk cards */
+.blk:nth-child(1){animation:fu .55s .04s var(--ease) both;}
+.blk:nth-child(2){animation:fu .55s .1s var(--ease) both;}
+.blk:nth-child(3){animation:fu .55s .16s var(--ease) both;}
+.blk:nth-child(4){animation:fu .55s .04s var(--ease) both;}
+.blk:nth-child(5){animation:fu .55s .1s var(--ease) both;}
+.prow:nth-child(1){animation:fu .5s .04s var(--ease) both;}
+.prow:nth-child(2){animation:fu .5s .09s var(--ease) both;}
+.prow:nth-child(3){animation:fu .5s .14s var(--ease) both;}
+.prow:nth-child(4){animation:fu .5s .19s var(--ease) both;}
+.prow:nth-child(5){animation:fu .5s .24s var(--ease) both;}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:1060px){
+  .hcard{display:none;}
+  .hero{padding-right:64px;}
+  nav,.hero,.about-sec,.blocks-wrap,.contact-sec,.fb-sec,footer,.inner-wrap{
+    padding-left:28px;padding-right:28px;}
+  .blk-grid{grid-template-columns:repeat(2,1fr);}
+  .contact-grid{grid-template-columns:1fr;}
+  .blk-projects{flex-direction:column;align-items:flex-start;gap:16px;}
+  .blk-p-right{display:none;}
+}
+@media(max-width:580px){
+  .h-name{font-size:50px;letter-spacing:-3px;}
+  .blk-grid,.blk-grid-2{grid-template-columns:1fr;}
+  nav{padding:0 18px;}
+  .nav-links{gap:18px;}
+  .cbox,.pdbox,.fb-box,.about-box{padding:26px 20px;}
+  .inner-wrap{padding:80px 20px 60px;}
+}
+</style>
+</head>
+<body>
+
+<!-- CANVAS -->
+<canvas id="cvs"></canvas>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav>
+  <div class="logo" onclick="scrollTop()">RV</div>
+  <div class="nav-links">
+    <a href="#sec-projects" onclick="smoothTo('sec-projects');return false;">Projects</a>
+    <a href="#sec-contact" onclick="smoothTo('sec-contact');return false;">Contact</a>
+    <button class="nav-cta" onclick="smoothTo('sec-contact')">Hire Me</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     MAIN PAGE (single scroll)
+═══════════════════════════════════════════ -->
+<div id="main-page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-orb"></div><div class="hero-orb2"></div>
+    <div class="h-badge"><div class="h-dot"></div>Open to opportunities · Indore, India</div>
+    <div class="h-name">
+      <span class="r1">Raunak</span>
+      <span class="r2">Verma.</span>
+    </div>
+    <div class="h-role">Data Scientist &nbsp;·&nbsp; ML Engineer &nbsp;·&nbsp; Builder</div>
+    <p class="h-desc">Aspiring Data Scientist passionate about Python, Machine Learning, and building real-world solutions that actually work.</p>
+    <div class="h-btns">
+      <button class="btn-p" onclick="smoothTo('sec-projects')"><span>View Projects →</span></button>
+      <button class="btn-s" onclick="smoothTo('sec-about')">About Me</button>
+    </div>
+    <div class="scroll-hint"><div class="sh-line"></div>Scroll to explore</div>
+    <!-- card -->
+    <div class="hcard">
+      <div class="hcard-in">
+        <div class="hav"><img src="profile.jpg" alt="Raunak"></div>
+        <div class="hcn">Raunak Verma</div>
+        <div class="hcr">Data Scientist · ML Eng</div>
+        <div class="hst-g">
+          <div class="hst"><div class="hst-n">5+</div><div class="hst-l">Live Projects</div></div>
+          <div class="hst"><div class="hst-n">3+</div><div class="hst-l">ML Models</div></div>
+          <div class="hst"><div class="hst-n">B.Sc</div><div class="hst-l">CS</div></div>
+          <div class="hst"><div class="hst-n">∞</div><div class="hst-l">Curiosity</div></div>
+        </div>
+        <div class="hpills">
+          <span class="hpill">Python</span><span class="hpill">ML</span>
+          <span class="hpill">React</span><span class="hpill">Pandas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <div class="div"></div>
+  <section id="sec-about" class="about-sec">
+    <div class="sec-eye">About</div>
+    <h2 class="sec-title">Who I am</h2>
+    <div class="about-box">
+      <p>I am Raunak Verma, a B.Sc student with a strong interest in Data Science and technology. I am passionate about exploring new concepts in Python, Machine Learning, and problem-solving.</p>
+      <p>I enjoy continuously learning and improving my technical skills while working on real-world concepts. My goal is to build a successful career in Data Science and contribute to impactful projects in the future.</p>
+    </div>
+  </section>
+
+  <!-- ── SECTION BLOCKS ── -->
+  <div class="blocks-wrap">
+
+    <!-- PROJECTS — full width -->
+    <div style="margin-top:60px;">
+      <div class="sec-eye">Work</div>
+      <h2 class="sec-title" style="margin-bottom:20px;" id="sec-projects">Projects</h2>
+      <div class="blk-projects" onclick="openInner('projects')">
+        <div class="blk-p-left">
+          <div class="blk-eye">Click to explore</div>
+          <h2>My Projects</h2>
+          <p>ML models, web apps & live deployments — House Price Predictor, Disease AI, AttendX, Cloud Cover, memeVerse.</p>
+          <div class="blk-p-tags">
+            <span class="blk-tag">Python</span><span class="blk-tag">ML</span>
+            <span class="blk-tag">React</span><span class="blk-tag">Streamlit</span><span class="blk-tag">Scikit-learn</span>
+          </div>
+        </div>
+        <div class="blk-p-right">
+          <div class="blk-p-icon">🚀</div>
+          <div class="blk-arr">→</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCHOOL + COLLEGE + JOURNEY (3 col) -->
+    <div style="margin-top:18px;">
+      <div class="blk-grid">
+        <div class="blk" onclick="openInner('school')">
+          <div class="blk-icon">📚</div>
+          <div class="blk-lbl">Education</div>
+          <div class="blk-name">School Life</div>
+          <p class="blk-hint">Foundation years across 3 phases — Class 1 to 12.</p>
+          <div class="blk-arrow">→</div>
+        </div>
+        <div class="blk" onclick="openInner('college')">
+          <div class="blk-icon">🎓</div>
+          <div class="blk-lbl">Education</div>
+          <div class="blk-name">College Life</div>
+          <p class="blk-hint">Holkar Science College — NDA prep to Data Science.</p>
+          <div class="blk-arrow">→</div>
+        </div>
+        <div class="blk" onclick="openInner('journey')">
+          <div class="blk-icon">🗺</div>
+          <div class="blk-lbl">Story</div>
+          <div class="blk-name">My Journey</div>
+          <p class="blk-hint">Cricket → Defence → Technology.</p>
+          <div class="blk-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOBBIES + GOALS + SKILLS (3 col) -->
+    <div style="margin-top:18px;margin-bottom:0;">
+      <div class="blk-grid">
+        <div class="blk" onclick="openInner('hobbies')">
+          <div class="blk-icon">🎨</div>
+          <div class="blk-lbl">Beyond Code</div>
+          <div class="blk-name">Hobbies & Interests</div>
+          <p class="blk-hint">Cricket, portrait drawing, and an obsession with staying curious.</p>
+          <div class="blk-arrow">→</div>
+        </div>
+        <div class="blk" onclick="openInner('goals')">
+          <div class="blk-icon">🎯</div>
+          <div class="blk-lbl">Vision</div>
+          <div class="blk-name">My Goals</div>
+          <p class="blk-hint">Data Science, Deep Learning, Gen AI — building toward a reputed IT career.</p>
+          <div class="blk-arrow">→</div>
+        </div>
+        <div class="blk" onclick="openInner('skills')">
+          <div class="blk-icon">⚡</div>
+          <div class="blk-lbl">Capabilities</div>
+          <div class="blk-name">My Skills</div>
+          <p class="blk-hint">Python, ML, leadership & more — personal strengths, soft skills, and technical stack.</p>
+          <div class="blk-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /blocks-wrap -->
+
+  <!-- ── CONTACT ── -->
+  <div class="div" style="margin:60px 64px 0;"></div>
+  <section id="sec-contact" class="contact-sec">
+    <div class="sec-eye">Contact</div>
+    <h2 class="sec-title" style="margin-bottom:28px;">Let's connect</h2>
+    <div class="contact-grid">
+      <div class="cc"><div class="cc-lbl">Email</div><a href="mailto:vermaraunak766@gmail.com">vermaraunak766@gmail.com</a></div>
+      <div class="cc"><div class="cc-lbl">LinkedIn</div><a href="https://www.linkedin.com/in/raunakverma07" target="_blank">linkedin.com/in/raunakverma07</a></div>
+      <div class="cc"><div class="cc-lbl">GitHub</div><a href="https://github.com/raunakverma07" target="_blank">github.com/raunakverma07</a></div>
+    </div>
+  </section>
+
+  <!-- ── FEEDBACK ── -->
+  <div class="div" style="margin:60px 64px 0;"></div>
+  <section class="fb-sec">
+    <div class="sec-eye">Feedback</div>
+    <h2 class="sec-title" style="margin-bottom:28px;">Share your thoughts</h2>
+    <div class="fb-box">
+      <p class="fb-intro">Hey there! I'm continuously working on improving this portfolio to make it better and more impactful. Your feedback, suggestions, or even a small thought would really help me grow and improve further.</p>
+      <form class="fb-form" action="https://formspree.io/f/mqegrqkd" method="POST" onsubmit="return fbck(event)">
+        <input type="text" name="name" placeholder="Your Name"/>
+        <input type="email" name="email" placeholder="Your Email (valid)"/>
+        <textarea name="message" id="fbmsg" rows="5" placeholder="Write your feedback... (minimum 10 words)" required></textarea>
+        <button type="submit" class="btn-p" style="align-self:flex-start;padding:12px 28px;"><span>Submit Feedback</span></button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Raunak Verma · Indore, India</p>
+    <p><span class="fg">◆</span> Built with HTML</p>
+  </footer>
+
+</div><!-- /main-page -->
+
+<!-- ═══════════════════════════════════════════
+     INNER PAGES (slide up like drawer)
+═══════════════════════════════════════════ -->
+
+<!-- PROJECTS -->
+<div id="inner-projects" class="inner-pg">
+  <div class="inner-wrap">
+    <button class="back-btn" onclick="closeInner('projects')">← Back</button>
+    <div class="i-eye">Work</div>
+    <h2 class="i-title">Projects</h2>
+    <p class="i-sub">Some of my work in Data Science and Development. Click any project for full details.</p>
+    <div class="plist" id="proj-list">
+      <div class="prow" onclick="showP(0)">
+        <div class="pl"><h3>House Price Predictor</h3><p>ML regression model · Live on Render</p></div>
+        <div class="pr"><div class="ptags"><span class="ptag">Python</span><span class="ptag">Scikit-learn</span></div><div class="p-arr">→</div></div>
+      </div>
+      <div class="prow" onclick="showP(1)">
+        <div class="pl"><h3>Disease Prediction AI</h3><p>Diabetes · Heart · Cancer · Streamlit</p></div>
+        <div class="pr"><div class="ptags"><span class="ptag">KNN</span><span class="ptag">Random Forest</span></div><div class="p-arr">→</div></div>
+      </div>
+      <div class="prow" onclick="showP(2)">
+        <div class="pl"><h3>AttendX</h3><p>Smart attendance management · React</p></div>
+        <div class="pr"><div class="ptags"><span class="ptag">React</span><span class="ptag">JS</span></div><div class="p-arr">→</div></div>
+      </div>
+      <div class="prow" onclick="showP(3)">
+        <div class="pl"><h3>Cloud Cover Predictor</h3><p>Weather ML model · KNN · Streamlit</p></div>
+        <div class="pr"><div class="ptags"><span class="ptag">Python</span><span class="ptag">KNN</span></div><div class="p-arr">→</div></div>
+      </div>
+
+    </div>
+    <div id="proj-det" style="display:none;margin-top:28px;"></div>
+  </div>
+</div>
+
+<!-- SCHOOL -->
+<div id="inner-school" class="inner-pg">
+  <div class="inner-wrap">
+    <button class="back-btn" onclick="closeInner('school')">← Back</button>
+    <div class="i-eye">Education</div>
+    <h2 class="i-title">School Life</h2>
+    <p class="i-sub">My school life is divided into three important phases, each contributing uniquely to my growth and learning.</p>
+    <div class="ptabs">
+      <div class="ptab on" onclick="rph('school',0,this)">Class 1–4</div>
+      <div class="ptab" onclick="rph('school',1,this)">Class 5–8</div>
+      <div class="ptab" onclick="rph('school',2,this)">Class 9–12</div>
+    </div>
+    <div id="school-box" class="cbox"><div class="cbox-lbl" id="school-lbl"></div><div id="school-cnt"></div></div>
+  </div>
+</div>
+
+<!-- COLLEGE -->
+<div id="inner-college" class="inner-pg">
+  <div class="inner-wrap">
+    <button class="back-btn" onclick="closeInner('college')">← Back</button>
+    <div class="i-eye">Education</div>
+    <h2 class="i-title">College Life</h2>
+    <p class="i-sub">Explore my college life year-wise — a journey of growth, discovery, and learning.</p>
+    <div class="ptabs">
+      <div class="ptab on" onclick="rph('college',0,this)">1st Year</div>
+      <div class="ptab" onclick="rph('college',1,this)">2nd Year</div>
+      <div class="ptab" onclick="rph('college',2,this)">3rd Year</div>
+    </div>
+    <div id="college-box" class="cbox"><div class="cbox-lbl" id="college-lbl"></div><div id="college-cnt"></div></div>
+  </div>
+</div>
+
+<!-- JOURNEY -->
+<div id="inner-journey" class="inner-pg">
+  <div class="inner-wrap">
+    <button class="back-btn" onclick="closeInner('journey')">← Back</button>
+    <div class="i-eye">Story</div>
+    <h2 class="i-title">My Journey</h2>
+    <p class="i-sub">From a cricket ground in Indore to deploying ML models.</p>
+    <div class="cbox">
+      <p>Throughout my school and college life, I have explored different paths while trying to understand where my true interest and strengths lie. Like many others, my early dream was to become a cricketer, driven by my passion for the sport.</p>
+      <p>During my higher secondary education, I chose PCM with a general thought of pursuing engineering. However, towards the end of school, I developed a strong interest in the defense sector and joined an NDA preparation academy with the aim of joining the Air Force.</p>
+      <p>As my journey progressed, my focus shifted again towards government services such as the Income Tax Department and CBI, which led me to prepare for SSC examinations. Each phase taught me something new and helped me understand my preferences better.</p>
+      <p>Eventually, during my college years, I discovered a clear and stable direction in the field of technology. I realized that this domain values knowledge, practical skills, and continuous learning over fixed criteria like cut-offs or theoretical scoring alone.</p>
+      <p>Today, I have chosen a path where growth depends on self-improvement, consistency, and real-world problem-solving ability. It is a field where I compete with myself, keep upgrading my skills, and move forward based on my capabilities.</p>
+    </div>
+  </div>
+</div>
+
+<!-- HOBBIES -->
+<div id="inner-hobbies" class="inner-pg">
+  <div class="inner-wrap">
+    <button class="back-btn" onclick="closeInner('hobbies')">← Back</button>
+    <div class="i-eye">Beyond Code</div>
+    <h2 class="i-title">Hobbies &amp; Interests</h2>
+    <p class="i-sub">What I do when I'm not writing Python or building projects.</p>
+    <div class="cbox">
+      <p>I have a strong interest in creative activities, especially drawing portraits. I enjoy sketching human faces, which helps me express creativity and improve my attention to detail.</p>
+      <p>Cricket is something I am truly passionate about. Every Sunday morning, my friends and I reach the ground early and play till afternoon. It's more than just a game — it's a routine I genuinely enjoy.</p>
+      <p>A fun highlight — I have hit six sixes in an over twice, which remains one of my personal achievements in cricket.</p>
+      <p>Apart from this, I enjoy continuously learning and exploring new things, especially in the fields of technology, AI, and development. Staying curious and improving my knowledge is something I value a lot.</p>
+    </div>
+  </div>
+</div>
+
+<!-- GOALS -->
+<div id="inner-goals" class="inner-pg">
+  <div class="inner-wrap">
+    <button class="back-btn" onclick="closeInner('goals')">← Back</button>
+    <div class="i-eye">Vision</div>
+    <h2 class="i-title">My Goals</h2>
+    <p class="i-sub">Where I am headed — technically, professionally, and personally.</p>
+    <div class="cbox">
+      <p>I am currently focused on building a strong foundation in Data Science, Machine Learning, Deep Learning, and Generative AI. My goal is to develop the skills and knowledge required to work on real-world problems and contribute meaningfully to the tech industry.</p>
+      <p>I aspire to build my career in a reputed IT company where I can grow professionally, work on impactful projects, and establish a strong and respected position through consistent effort and learning.</p>
+      <p>The IT field is one of the most dynamic and evolving domains, offering both growth and opportunities. For me, it represents a perfect combination of passion and profession — where I can continuously learn new technologies while also building a stable and rewarding career.</p>
+      <p>My long-term goal is to keep improving my technical and problem-solving skills, stay updated with advancements in AI and technology, and become a valuable contributor in the field of intelligent systems and data-driven solutions.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div id="inner-skills" class="inner-pg">
+  <div class="inner-wrap">
+    <button class="back-btn" onclick="closeInner('skills')">← Back</button>
+    <div class="i-eye">Capabilities</div>
+    <h2 class="i-title">My Skills</h2>
+    <p class="i-sub">A mix of personal strengths, soft skills, and technical abilities built over the years.</p>
+    <div class="skills-container">
+      <div class="skill-box">
+        <h2>Personal Strengths</h2>
+        <p>I have been a responsible and focused individual since my early years. Along with academics, I have actively participated in sports and other activities, maintaining a balanced performance.</p>
+        <p>Serving as a captain multiple times during my school and college life has helped me develop strong leadership qualities and the ability to manage responsibilities effectively.</p>
+      </div>
+      <div class="skill-box">
+        <h2>Core Skills</h2>
+        <ul>
+          <li>Quick Learner with strong adaptability</li>
+          <li>Effective Decision Making & Problem Solving</li>
+          <li>Leadership & Team Coordination</li>
+          <li>Strong Communication Skills</li>
+          <li>Situation Handling & Planning Ability</li>
+          <li>Ability to understand others and express ideas clearly</li>
+        </ul>
+      </div>
+      <div class="skill-box">
+        <h2>Technical Skills</h2>
+        <ul>
+          <li>Programming: Python, SQL</li>
+          <li>Web: HTML, CSS</li>
+          <li>Libraries: Pandas, NumPy, Scikit-learn</li>
+          <li>Concepts: Machine Learning, Data Analysis</li>
+          <li>Basics of Generative AI & AI tools</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── DATA ──────────────────────────── */
+var SD=[
+  {l:'Phase 1 · Foundation Years · Crescent Public High School',p:[
+    'I completed my early schooling at Crescent Public High School, where I built a strong academic foundation. During this phase, I consistently performed at the top of my class.',
+    'In Class 1, I secured 1st rank with 98%, followed by 2nd rank in Class 2 with 92%. I maintained my performance in Class 3 with 88% (2nd rank), and in Class 4, I achieved 82% with 3rd rank.',
+    'Apart from academics, this phase was filled with memorable friendships and joyful moments. I had a great group of friends, and on my last day at school, one of my closest friends surprised me with many thoughtful gifts, making it a truly emotional memory.',
+    'I was also one of the favorite students among teachers, known for my discipline and performance. When I decided to leave the school, even the principal encouraged me to stay and generously offered free education.',
+    'However, for better academic growth, I chose to move forward. This phase remains a crucial part of my journey, where I developed confidence, discipline, and a strong base for future learning.'
+  ]},
+  {l:'Phase 2 · Middle Years · Class 5 to 8 · Sandipani Preparatory School',p:[
+    'I took admission in Sandipani Preparatory School in Class 5. This phase was one of the most enjoyable and balanced stages of my school life, where both academics and activities were given equal importance.',
+    'Teachers were supportive and provided enough time for sports and extracurricular activities. Along with studies, I was able to enjoy my school life fully.',
+    'During this phase, I made many friends. One of them is still with me till now. Our bond grew stronger over time, and we have continued our journey together from school to college like brothers.',
+    'In Class 6, I was selected as the Green House Wise Captain. Later, I served as Captain in Class 7 and 8, which helped me develop leadership qualities and responsibility.',
+    'Initially, the school was limited to Class 5, but gradually it expanded up to Class 8 for our batch. This allowed us to continue our journey in the same environment for a longer period.',
+    'This phase includes many memories such as traveling by auto, spending lunch breaks with friends, playing together, and going on picnics. These experiences made this phase truly special and unforgettable.'
+  ]},
+  {l:'Phase 3 · Senior School · Class 9 to 12 · Sandipani (Narayan Bagh)',p:[
+    'This phase felt quite different and, in many ways, more challenging than the earlier ones. In Class 9, many of my close friends had already left the school. I moved to the Narayan Bagh branch of Sandipani. I also had to adjust to a completely new environment.',
+    'The atmosphere there was not very comfortable at first. Many students were not disciplined, and the environment felt unfamiliar and difficult to adapt to. Because of this, interactions with teachers also remained mostly formal. They maintained distance and treated students in a strict manner, focusing primarily on academics rather than personal connection.',
+    'In Class 10, the COVID-19 pandemic disrupted everything. Schools were closed, and classes shifted to an online mode. There was uncertainty about board exams, and at one point, it felt like exams would be conducted, so I prepared seriously. However, due to the pandemic situation, exams were eventually replaced with general promotion.',
+    'Class 11 did not function fully due to ongoing disruptions. When classes resumed, one of my old friends rejoined the school, and I also made some new friends. However, due to the pandemic, many activities and experiences that usually define school life could not take place, and eventually I progressed into Class 12.',
+    'During Class 12, I was selected as the Sports Captain based on my performance in sports. It was a memorable experience as many of my close friends were also House Captains, which made our coordination and leadership even stronger. Together, we handled responsibilities, planned events, and also enjoyed the freedom that came with the role. From organizing Sports Day to managing activities, we successfully conducted everything in a well-structured way. Along with responsibilities, this phase was also filled with fun moments that made it even more special.',
+    'Around the same time, 16 August 2022 became a memorable date for me — the day I met someone for the first time whose presence quietly stayed in my memories. Even though things didn\'t go beyond that moment, the experience remained meaningful. Later, this friendship gradually faded and eventually broke, leaving behind only a formal connection. I hope that with time, things may naturally become comfortable and normal again.',
+    'Board exams taught me the real value of even a single mark. I scored 374 out of 500, while students with 375 marks received a government reward of ₹25,000. That single mark difference made me realize how small margins can create significant outcomes.',
+    'Overall, this phase included a mix of challenges, new friendships, life lessons, and meaningful experiences. It marked the end of my school journey — what I consider the "Best Phase of Life." Even though it ended, it left behind memories, growth, and lessons that will always stay with me.'
+  ]}
+];
+var CD=[
+  {l:'1st Year · New Beginnings · Holkar Science College',p:[
+    'After completing Class 12, I started preparing for NDA at CMC Defence Academy. At the same time, I took admission in Holkar Science College for my B.Sc degree. Initially, my major subject was Mathematics by default, which I later changed to Computer Science.',
+    'Due to NDA preparation, I was not able to attend college regularly. Because of this, I could not build many friendships in the beginning, and everything felt new and unfamiliar.',
+    'During this time, I developed a good friendship with one person who supported me a lot throughout my first year. She helped me with assignments, shared notes, and even explained mathematics concepts like a teacher. Her support played an important role in my academic journey during that phase.',
+    'In the second semester, I realized that due to my spectacles, NDA might not be a suitable path for me. After that, I joined a SSC batch in the same coaching institute.',
+    'During this time, I mostly focused on my coaching rather than college. I used to visit college only occasionally, mainly for examinations.',
+    'In the second semester, I also participated in a drawing competition where I made a sketch of Bhagat Singh and secured second prize along with a certificate.',
+    'I successfully passed both semesters, but due to limited focus on college, my CGPA remained around 6.4. Overall, this phase was about adjustment, self-realization, and balancing multiple priorities, and eventually I moved on to the second year of my college journey.'
+  ]},
+  {l:'2nd Year · Skill Building Phase',p:[
+    'The second year of college marked one of the most significant turning points of my life. I began attending college far more regularly and started investing genuinely in the college experience. The change in environment allowed me to build real friendships and start thinking seriously about my actual direction.',
+    'It was during this year that I began exploring Python — initially out of curiosity. I started with basic scripts, then moved into data handling, and then into machine learning. Something clicked immediately. The logic, the problem-solving, the ability to construct solutions from scratch and see them execute correctly — it was genuinely exciting.',
+    'As my interest in technology grew, I naturally drifted away from SSC preparation. I realized that the IT field was where my energy truly belonged. Unlike government exams that depend on cut-offs and fixed seats, technology rewards what you can actually build and think.',
+    'In the third semester, due to SSC preparation, I was again unable to attend college regularly. However, one positive change during this time was that I switched my vocational subject from Physics to Cyber Security, which turned out to be very interesting.',
+    'Because of limited focus on college, my academic performance in the third semester was not very strong. However, I worked on improving myself and managed to cover up in the fourth semester, achieving an SGPA of 7.30.',
+    'During this period, a cricket tournament was organized in college where all matches were knockout-based. Our team also participated, and I was the captain of the team. Unfortunately, due to a lack of strong players, we lost our first match.',
+    'On a lighter note, my personal performance in that match was quite memorable — I faced just one last ball and ended up hitting a six on it.',
+    'In the fourth semester, I started attending college more regularly. As a result, I was able to build a small circle of 3–4 friends in the class, which made the college environment more comfortable and engaging.',
+    'With these small experiences, improvements, and memories, my second year came to an end, marking another step forward in my overall journey.'
+  ]},
+  {l:'3rd Year · Clarity, Skills & Future Direction · Sem 5–6',p:[
+    'During my SSC preparation, I realized that General Science was becoming increasingly challenging, which encouraged me to explore alternative career paths. After careful consideration, I decided to shift my focus toward technology and software development, aiming to build a career based on practical skills and continuous learning.',
+    'I joined a Data Science institute, where I completed training in Python, SQL, NumPy, Pandas, Matplotlib, Streamlit, Machine Learning, Deep Learning, and Generative AI. Throughout this journey, I worked on multiple hands-on projects, strengthening both my technical knowledge and problem-solving abilities.',
+    'During this period, I also completed a Data Science internship, where I gained practical experience by working with Python and Machine Learning. This helped me understand real-world workflows and further improved my confidence in applying technical concepts to practical problems.',
+    'Alongside my technical learning, I maintained better consistency in academics. I secured an SGPA of 8.25 in the 5th semester and 8.80 in the 6th semester, graduating with an overall CGPA of 7.42.',
+    'At the beginning of 2026, I also developed a strong interest in frontend development. I learned HTML and CSS through self-study and started building website clones before creating my own personal portfolio. This portfolio serves as a place to showcase my journey, projects, and continuous learning.',
+    'I successfully completed my B.Sc. degree in June 2026 and plan to pursue an MCA as the next step in my academic journey while continuing to strengthen my expertise in Artificial Intelligence and Data Science.',
+    'Looking back, this phase gave me clarity, confidence, and a well-defined career direction. It marked the transition from exploring different career options to building a strong foundation in Data Science, AI, and modern technologies with a long-term vision for continuous growth.'
+  ]}
+];
+var PD=[
+  {t:'House Price Predictor',tech:['Python','Pandas','Scikit-learn','Regression'],
+   desc:'Machine Learning model to predict house prices using regression techniques. The pipeline includes data cleaning, feature engineering, model selection, and a live deployment on Render.',
+   gh:'https://github.com/raunakverma07/housing-predictor',live:'https://housing-app-g2v4.onrender.com'},
+  {t:'Disease Prediction AI',tech:['Python','Pandas','Scikit-learn','KNN','Random Forest','Streamlit'],
+   desc:'A ML-based healthcare project capable of predicting Diabetes, Heart Disease, and Breast Cancer using classification algorithms such as KNN and Random Forest, demonstrating the practical application of AI in healthcare.',
+   gh:'https://github.com/raunakverma07/disease-prediction-project',live:'https://raunak-medai.streamlit.app'},
+  {t:'AttendX',tech:['React','JavaScript','CSS','HTML'],
+   desc:'A smart attendance management system that offers a digital alternative to traditional registers with additional features for efficient record management.',
+   gh:'https://github.com/raunakverma07/teacher',live:'https://gift-by-raunak.netlify.app'},
+  {t:'Cloud Cover Predictor',tech:['Python','ML','KNN'],
+   desc:'ML model built using KNN that predicts Cloud Cover based on Weather conditions. Deployed as an interactive Streamlit web application.',
+   gh:'https://github.com/raunakverma07/Cloud-Cover',live:'https://raunak-cloud-cover.streamlit.app'}
+];
+
+/* ── INNER PAGE OPEN / CLOSE ────────── */
+function openInner(id){
+  var el=document.getElementById('inner-'+id);
+  el.classList.add('open');
+  document.body.style.overflow='hidden';
+  el.scrollTop=0;
+  if(id==='school') rph('school',0);
+  if(id==='college') rph('college',0);
+  if(id==='projects'){
+    document.getElementById('proj-list').style.display='flex';
+    document.getElementById('proj-list').style.flexDirection='column';
+    document.getElementById('proj-det').style.display='none';
+  }
+}
+function closeInner(id){
+  document.getElementById('inner-'+id).classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ── PHASE TABS ─────────────────────── */
+function rph(type,idx,el){
+  if(el){
+    el.closest('.ptabs').querySelectorAll('.ptab').forEach(function(t){t.classList.remove('on');});
+    el.classList.add('on');
+  }
+  var d=(type==='school'?SD:CD)[idx];
+  var box=document.getElementById(type+'-box');
+  document.getElementById(type+'-lbl').textContent=d.l;
+  document.getElementById(type+'-cnt').innerHTML=d.p.map(function(t){return'<p>'+t+'</p>';}).join('');
+  box.classList.remove('anim');void box.offsetWidth;box.classList.add('anim');
+}
+
+/* ── PROJECT DETAIL ─────────────────── */
+function showP(i){
+  var p=PD[i];
+  document.getElementById('proj-list').style.display='none';
+  var d=document.getElementById('proj-det');
+  d.style.display='block';
+  d.innerHTML='<button class="back-btn" onclick="closeP()" style="margin-bottom:32px;">← All Projects</button>'
+    +'<div class="pdbox"><div class="pd-t">'+p.t+'</div>'
+    +'<div class="pd-tech">'+p.tech.map(function(t){return'<span class="ptag">'+t+'</span>';}).join('')+'</div>'
+    +'<div class="pd-desc">'+p.desc+'</div>'
+    +'<div class="pd-links"><a class="pdl s" href="'+p.live+'" target="_blank">Live Demo →</a>'
+    +'<a class="pdl g" href="'+p.gh+'" target="_blank">GitHub</a></div></div>';
+}
+function closeP(){
+  document.getElementById('proj-list').style.display='flex';
+  document.getElementById('proj-list').style.flexDirection='column';
+  document.getElementById('proj-det').style.display='none';
+}
+
+/* ── FEEDBACK ───────────────────────── */
+function fbck(e){
+  var m=document.getElementById('fbmsg').value;
+  if(m.trim().split(/\s+/).length<10){e.preventDefault();alert('Please write at least 10 words.');return false;}
+  return true;
+}
+
+/* ── SCROLL HELPERS ─────────────────── */
+function scrollTop(){window.scrollTo({top:0,behavior:'smooth'});}
+function smoothTo(id){
+  var el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ── INIT ───────────────────────────── */
+rph('school',0);rph('college',0);
+
+/* ── CANVAS PARTICLES ───────────────── */
+(function(){
+  var cv=document.getElementById('cvs'),ctx=cv.getContext('2d');
+  var W,H,pts=[];var N=60;
+  var mouse={x:-9999,y:-9999};
+  function rsz(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+  rsz();window.addEventListener('resize',rsz);
+  /* mouse — only desktop, won't fire on touch */
+  window.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY;});
+  /* on mobile mouse stays far away — no lines, just particles */
+  for(var i=0;i<N;i++)pts.push({
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+    vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,
+    r:Math.random()*1.1+.3,o:Math.random()*.45+.18
+  });
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<N;i++){
+      var s=pts[i];s.x+=s.vx;s.y+=s.vy;
+      if(s.x<0)s.x=W;if(s.x>W)s.x=0;
+      if(s.y<0)s.y=H;if(s.y>H)s.y=0;
+    }
+    /* node connections */
+    for(var i=0;i<N;i++){
+      for(var j=i+1;j<N;j++){
+        var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<115){
+          ctx.beginPath();
+          ctx.strokeStyle='rgba(155,92,255,'+(1-d/115)*.1+')';
+          ctx.lineWidth=.4;
+          ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();
+        }
+      }
+      /* mouse lines — only when mouse is on screen */
+      if(mouse.x>0 && mouse.x<W){
+        var mdx=pts[i].x-mouse.x,mdy=pts[i].y-mouse.y,md=Math.sqrt(mdx*mdx+mdy*mdy);
+        if(md<180){
+          ctx.beginPath();
+          ctx.strokeStyle='rgba(255,111,216,'+(1-md/180)*.3+')';
+          ctx.lineWidth=.65;
+          ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(mouse.x,mouse.y);ctx.stroke();
+        }
+      }
+    }
+    /* dots */
+    for(var i=0;i<N;i++){
+      var s=pts[i];
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      var c=i%3===0?'0,207,255':i%3===1?'155,92,255':'255,111,216';
+      ctx.fillStyle='rgba('+c+','+s.o+')';ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
