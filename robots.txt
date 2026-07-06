@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://raunakverma.netlify.app/sitemap.xml
